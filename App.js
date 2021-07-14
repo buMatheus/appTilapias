@@ -8,6 +8,7 @@ import EditarPerfil from './views/EditarPerfil/EditarPerfil';
 import Endereco from './views/Endereco';
 import NovoEndereco from './views/Endereco/Create';
 import TodosEnderecos from './views/Endereco/SearchAdress';
+import Update from './views/Endereco/Update';
 
 
 const Stack = createStackNavigator();
@@ -19,7 +20,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Start" component={Start} options={{
+        <Stack.Screen name="Start"  component={Start} options={{
           title: 'Tela Inicial',
           headerShown:false,
           headerStyle: {backgroundColor: blue},
@@ -98,6 +99,17 @@ export default function App() {
         }} 
         />
         <Stack.Screen name="AllAdress" component={TodosEnderecos} options={{
+          title: 'Todos Endereços',
+          headerShown:true,
+          headerStyle: {backgroundColor: blue},
+          headerTintColor: black,
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            alignSelf: 'center',
+          }
+        }} 
+        />
+        <Stack.Screen name="updateAdress" component={Update} options={{
           title: 'Todos Endereços',
           headerShown:true,
           headerStyle: {backgroundColor: blue},

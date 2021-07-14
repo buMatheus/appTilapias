@@ -165,6 +165,7 @@ export default function SearchAdress({navigation}){
                                 <View style={css.adressList_row4}>
                                     <TouchableOpacity
                                         style={css.adressList_row4_atr1}
+                                        onPress = {()=> navigation.navigate('updateAdress', {adress: adress[index]})}
                                         >
                                         <Text style={css.adressList_buttonText}>
                                             Editar
