@@ -67,10 +67,13 @@ const css = StyleSheet.create({
       zIndex: 100,
     },
     list:{
+      width: '80%',
+    },
+    scrollView:{
       display: 'flex',
-      flex: 2,
       flexDirection: 'row',
-      marginTop: 20,
+      margin: 10,
+      width: '100%',
     },
     adressList:{
       flexDirection: 'column',

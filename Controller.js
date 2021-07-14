@@ -73,7 +73,6 @@ app.post('/readAllAdress', async (req,res)=>{
 });
 
 app.post('/updateUser', async (req,res)=>{
-  console.log(req.body);
   let response = await user.findOne({
     where:{
       id:req.body.id
@@ -102,7 +101,27 @@ app.get('/deleteUser', async (req,res)=>{
     res.send('Usuário editado com sucesso!');
 });
 
-
+app.post('/updateAdress', async (req,res)=>{
+  await adress.update({ activity: false }, { // coloca activity de todos os endereços do usuário logado em false
+    where: {
+      userId: req.body.userId
+    }
+  });
+  let response = await adress.findOne({
+    where:{
+      id:req.body.id
+    }
+  });
+  if(response === null ){
+    res.send(JSON.stringify('failed'));
+  }else{
+    response.activity = req.body.activity;
+    response.save();
+    res.send(JSON.stringify('Atualizado com sucesso!'));
+  }
+    
+    
+});
 
 
 app.post('/createAdress', async (req,res)=>{

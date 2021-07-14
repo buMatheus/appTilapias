@@ -3,6 +3,7 @@ import { Text, View, FlatList, Switch, TouchableOpacity, ScrollView } from 'reac
 import {css} from './style';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../../config/config.json';
+import { TapGestureHandler } from 'react-native-gesture-handler';
 
 
 
@@ -10,8 +11,6 @@ import config from '../../config/config.json';
 export default function SearchAdress({navigation}){
     const [adress, setAdress] = useState(null);
     const [id, setID] = useState(null);
-    const [enable, setEnable] = useState(true);
-    const [disable, setDisable] = useState(false);
 
     useEffect(()=>{
         verifyLogin();
@@ -51,12 +50,46 @@ export default function SearchAdress({navigation}){
             setAdress(json);
         }
     }
+    async function setActivity(){
+        adress.forEach(element => {
+            if(element.activity === true){
+                let response = switchActivity(element);
+                if(response == true){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        });
+    }
+    async function switchActivity(element){
+        let response = await fetch(`${config.urlRoot}updateAdress`, {
+            method: 'POST',
+            body: JSON.stringify({
+                userId: id,
+                id: element.id,
+                activity: element.activity,
+            }),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type':'application/json'
+            },
+            
+        });
+        let json = await response.json();
+
+        if(json === 'failed'){
+            console.log('Deu Errado!');
+            return false;
+        }else{
+            console.log('Deu Certo!');
+            return true;
+        }
+    }
 
 
     function toggleSwitch(index){
-        console.log('entrei');
         let cont = 0;
-        console.log(index);
         let newadd = adress.map((item) => {
             if(item.id == index) {
                 item.activity = true;
@@ -68,85 +101,97 @@ export default function SearchAdress({navigation}){
         })
 
         setAdress(newadd)
-        // for(cont; cont < adress.length; cont++){
-        //     if(index === adress.id){
-        //         if(adress.activity === false){
-        //             adress.activity = true;
-        //             (previousState => !previousState);
-        //         }else{
-        //             adress.activity = false;
-        //         }
-        //     }
-        // }
     }
     
 
     return (
         <View style={css.container}>
-            <TouchableOpacity style={css.buttomSave}>
-                <Text style={css.buttomSave_Text}>
+            <TouchableOpacity 
+                style={css.buttomSave}
+                onPress={() => setActivity()}
+            >
+                <Text 
+                    style={css.buttomSave_Text}
+                >
                     Salvar Alterações
                 </Text>
             </TouchableOpacity>
-            <ScrollView>
-            { (adress !== null) && (
+                { (adress !== null) && (            
                     <FlatList
-                    style={css.list}
-                    data={adress}
-                    renderItem={({item, index}) => (
-                        <View style={css.adressList} key={index}>
-                            <View style={css.adressList_row1}>
-                                <Text style={css.adressList_row1_atr1}>
-                                    {adress[index].complemento}
-                                </Text>
-                                <Text style={css.adressList_row1_atr2}>
-                                    {adress[index].numero}
-                                </Text>
-                            </View>
-                            <View style={css.adressList_row2}>
-                                <Text style={css.adressList_row2_atr1}>
-                                    {adress[index].logradouro}
-                                </Text>
-                                <Text style={css.adressList_row2_atr2}>
-                                    {adress[index].bairro}
-                                </Text>
-                            </View>
-                            <View style={css.adressList_row3}>
-                                <Text style={css.adressList_row3_atr1}>
-                                    {adress[index].cidade}
-                                </Text>
-                                <Text style={css.adressList_row3_atr2}>
-                                    {adress[index].estado}
-                                </Text>
-                            </View>
-                            <View style={css.adressList_row4}>
-                                <TouchableOpacity style={css.adressList_row4_atr1}>
-                                    <Text style={css.adressList_buttonText}>
-                                        Editar
+                        ItemSeparatorComponent={
+                            Platform.OS !== 'android' &&
+                            (({ highlighted }) => (
+                            <View
+                                style={[
+                                style.separator,
+                                highlighted && { marginLeft: 0 }
+                                ]}
+                            />
+                            ))
+                        }
+                        style={css.list}
+                        data={adress}
+                        renderItem={({item, index, separators}) => (
+                            <View
+                                style={css.adressList} 
+                                key={index}
+                                onShowUnderlay={separators.highlight}
+                                onHideUnderlay={separators.unhighlight}
+                                >
+                                <View style={css.adressList_row1}>
+                                    <Text style={css.adressList_row1_atr1}>
+                                            {adress[index].complemento}
                                     </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={css.adressList_row4_atr2}>
-                                    <Text style={css.adressList_buttonText}>
-                                        Deletar
+                                    <Text style={css.adressList_row1_atr2}>
+                                            {adress[index].numero}
                                     </Text>
-                                </TouchableOpacity>
+                                </View>
+                                <View style={css.adressList_row2}>
+                                    <Text style={css.adressList_row2_atr1}>
+                                        {adress[index].logradouro}
+                                     </Text>
+                                    <Text style={css.adressList_row2_atr2}>
+                                        {adress[index].bairro}
+                                    </Text>
+                                </View>
+                                <View style={css.adressList_row3}>
+                                    <Text style={css.adressList_row3_atr1}>
+                                        {adress[index].cidade}
+                                    </Text>
+                                    <Text style={css.adressList_row3_atr2}>
+                                        {adress[index].estado}
+                                    </Text>
+                                </View>
+                                <View style={css.adressList_row4}>
+                                    <TouchableOpacity
+                                        style={css.adressList_row4_atr1}
+                                        >
+                                        <Text style={css.adressList_buttonText}>
+                                            Editar
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={css.adressList_row4_atr2}>
+                                        <Text style={css.adressList_buttonText}>
+                                            Deletar
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={css.adressList_row5}>
+                                    <Text>Ativo: </Text>
+                                    <Switch
+                                        trackColor={{ false: "#BAB8B5", true: "#62bac0" }}
+                                        thumbColor={adress[index].activity ? "#62bac0": "#BAB8B5" }
+                                        ios_backgroundColor="#3e3e3e"
+                                        onChange={() => toggleSwitch(adress[index].id)}
+                                        value={adress[index].activity}
+                                    />
+                                </View>
                             </View>
-                            <View style={css.adressList_row5}>
-                                <Text>Ativo: </Text>
-                                <Switch
-                                    trackColor={{ false: "#BAB8B5", true: "#62bac0" }}
-                                    thumbColor={adress[index].activity ? "#62bac0": "#BAB8B5" }
-                                    ios_backgroundColor="#3e3e3e"
-                                    onChange={() => toggleSwitch(adress[index].id)}
-                                    value={adress[index].activity}
-                                />
-                            </View>
-                        </View>
-                    )}
-                    keyExtractor={(item, index) => String(index)}
-                />
+                        )}
+                        keyExtractor={(item, index) => String(index)}
+                    />      
                 )}
-            </ScrollView>
+                
         </View>
     );
 }
