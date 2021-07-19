@@ -10,8 +10,8 @@ module.exports = {
       logradouro: 'Rua Benedito Valadares',
       numero: '228',
       complemento: '',
-      activity: false,
-      userId: '1',
+      activity: true,
+      UserId: '1',
       createdAt: new Date(),
       updatedAt: new Date()
     }]);

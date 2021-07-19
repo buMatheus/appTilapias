@@ -14,32 +14,32 @@ module.exports = {
       status: {
         type: Sequelize.INTEGER
       },
-      userId: {
+      UserId: {
         type: Sequelize.INTEGER,
-        references: {
+        references:{
           model: 'users',
           key: 'id'
         },
         onDelete: 'cascade',
-        onUpdate: 'cascade',
+        onUpdate: 'cascade'
       },
-      enderecoId: {
+      EnderecoId: {
         type: Sequelize.INTEGER,
-        references: {
+        references:{
           model: 'enderecos',
           key: 'id'
         },
         onDelete: 'cascade',
-        onUpdate: 'cascade',
+        onUpdate: 'cascade'
       },
-      itemId: {
+      ItemId: {
         type: Sequelize.INTEGER,
-        references: {
+        references:{
           model: 'items',
           key: 'id'
         },
         onDelete: 'cascade',
-        onUpdate: 'cascade',
+        onUpdate: 'cascade'
       },
       createdAt: {
         allowNull: false,

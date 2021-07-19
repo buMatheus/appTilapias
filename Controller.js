@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const models = require('./models');
+const { Op } = require('sequelize');
 
 const app = express();
 app.use(cors());
@@ -9,6 +10,7 @@ app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
 let user=models.User;
 let adress = models.Endereco;
+let product = models.Produto;
 
 app.post('/login', async (req,res)=>{
     const response = await user.findOne({
@@ -54,12 +56,26 @@ app.get('/readUser', async (req,res)=>{
 app.get('/readAdress', async (req,res)=>{
   let readAdress = await adress.findByPk(req.body.adressId);
 });
+app.get('/allProducts', async (req,res)=>{
+  let products = await product.findAll({ where:{
+    valor:{
+      [Op.gte]: 0
+    }}}
+  );
+  console.log(products);
+  if(products === null){
+    res.send(JSON.stringify('failed'));
+  }else{
+    res.send(products);
+  }
+});
 app.post('/readAllAdress', async (req,res)=>{
   let readAllAdress = await adress.findAll({
     where: {
-      userId: req.body.userId
+      UserId: req.body.userId
     }
   });
+  console.log(readAllAdress);
   if(readAllAdress === null){
     res.send(JSON.stringify('failed'));
   }else{
@@ -92,7 +108,7 @@ app.post('/updateUser', async (req,res)=>{
 app.post('/updateAdress', async (req,res)=>{
   await adress.update({ activity: false }, { // coloca activity de todos os endereços do usuário logado em false
     where: {
-      userId: req.body.userId
+      UserId: req.body.userId
     }
   });
   let response = await adress.findOne({
@@ -112,7 +128,7 @@ app.post('/updateAdress', async (req,res)=>{
     response.numero= req.body.numero,
     response.complemento= req.body.complemento,
     response.activity= req.body.activity,
-    response.userId= req.body.userId,
+    response.UserId= req.body.userId,
     response.save();
     res.send(JSON.stringify('Atualizado com sucesso!'));
   }
@@ -132,13 +148,13 @@ app.post('/deleteAdress', async (req,res)=>{
   if(req.body.activity === true){
     await adress.update({ activity: false }, { // coloca activity de todos os endereços do usuário logado em false
       where: {
-        userId: req.body.userId
+        UserId: req.body.userId
       }
     });
     await adress.destroy({
       where: {id: req.body.id}
     });
-    let response = await adress.findOne({wher: {userId: req.body.userId}});
+    let response = await adress.findOne({where: {UserId: req.body.userId}});
     response.activity = true,
     response.save();
     res.send(response);
@@ -154,7 +170,7 @@ app.post('/deleteAdress', async (req,res)=>{
 app.post('/updateAdressActivity', async (req,res)=>{
   await adress.update({ activity: false }, { // coloca activity de todos os endereços do usuário logado em false
     where: {
-      userId: req.body.userId
+      UserId: req.body.userId
     }
   });
   let response = await adress.findOne({
@@ -177,7 +193,7 @@ app.post('/updateAdressActivity', async (req,res)=>{
 app.post('/createAdress', async (req,res)=>{
   await adress.update({ activity: false }, { // coloca activity de todos os endereços do usuário logado em false
     where: {
-      userId: req.body.userId
+      UserId: req.body.userId
     }
   });
   const response = await adress.create({ // Cria novo Endereço, colocando activity em true
@@ -189,7 +205,7 @@ app.post('/createAdress', async (req,res)=>{
     numero: req.body.numero,
     complemento: req.body.complemento,
     activity: req.body.activity,
-    userId: req.body.userId,
+    UserId: req.body.userId,
     createdAt: new Date(),
     updatedAt: new Date(),
 });

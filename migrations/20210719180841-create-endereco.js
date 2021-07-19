@@ -33,16 +33,16 @@ module.exports = {
         type: Sequelize.STRING
       },
       activity: {
-        type: Sequelize.STRING
+        type: Sequelize.BOOLEAN
       },
-      userId: {
+      UserId: {
         type: Sequelize.INTEGER,
-        references: {
+        references:{
           model: 'users',
           key: 'id'
         },
         onDelete: 'cascade',
-        onUpdate: 'cascade',
+        onUpdate: 'cascade'
       },
       createdAt: {
         allowNull: false,

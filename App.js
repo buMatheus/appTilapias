@@ -9,6 +9,8 @@ import Endereco from './views/Endereco';
 import NovoEndereco from './views/Endereco/Create';
 import TodosEnderecos from './views/Endereco/SearchAdress';
 import Update from './views/Endereco/Update';
+import Products from './views/Produtos/index';
+
 
 
 const Stack = createStackNavigator();
@@ -111,6 +113,17 @@ export default function App() {
         />
         <Stack.Screen name="updateAdress" component={Update} options={{
           title: 'Todos Endereços',
+          headerShown:true,
+          headerStyle: {backgroundColor: blue},
+          headerTintColor: black,
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            alignSelf: 'center',
+          }
+        }} 
+        />
+        <Stack.Screen name="Produtos" component={Products} options={{
+          title: 'Todos os Produtos',
           headerShown:true,
           headerStyle: {backgroundColor: blue},
           headerTintColor: black,

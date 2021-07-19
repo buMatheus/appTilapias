@@ -3,7 +3,6 @@ import { Text, View, FlatList, Switch, TouchableOpacity, ScrollView } from 'reac
 import {css} from './style';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '../../config/config.json';
-import { TapGestureHandler } from 'react-native-gesture-handler';
 
 
 
@@ -47,6 +46,7 @@ export default function SearchAdress({navigation}){
         if(json === 'failed'){
             console.log('Deu errado!');
         }else{
+            console.log(json);
             setAdress(json);
         }
     }

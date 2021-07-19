@@ -11,14 +11,14 @@ module.exports = {
       quantidade: {
         type: Sequelize.INTEGER
       },
-      produtoId: {
+      ProdutoId: {
         type: Sequelize.INTEGER,
-        references: {
+        references:{
           model: 'produtos',
           key: 'id'
         },
         onDelete: 'cascade',
-        onUpdate: 'cascade',
+        onUpdate: 'cascade'
       },
       createdAt: {
         allowNull: false,

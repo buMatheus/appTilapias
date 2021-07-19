@@ -5,9 +5,9 @@ module.exports = {
     return queryInterface.bulkInsert('pedidos', [{
       valor: '33.00',
       status: '0',
-      userId: '1',
-      enderecoId: '1',
-      itemId: '1',
+      UserId: '1',
+      EnderecoId: '1',
+      ItemId: '1',
       createdAt: new Date(),
       updatedAt: new Date()
     }]);

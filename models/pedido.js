@@ -10,17 +10,17 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Pedido.hasMany(models.Item)
-      Pedido.hasMany(models.Endereco)
-      Pedido.belongsTo(models.User)
+      Pedido.hasMany(models.Item);
+      Pedido.belongsTo(models.Endereco);
+      Pedido.belongsTo(models.User);
     }
   };
   Pedido.init({
     valor: DataTypes.FLOAT,
     status: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER,
-    enderecoId: DataTypes.INTEGER,
-    itemId: DataTypes.INTEGER
+    UserId: DataTypes.INTEGER,
+    EnderecoId: DataTypes.INTEGER,
+    ItemId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Pedido',

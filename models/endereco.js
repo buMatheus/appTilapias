@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Endereco.belongsTo(models.User)
-      Endereco.belongsTo(models.Pedido)
+      Endereco.belongsTo(models.User);
+      Endereco.hasMany(models.Pedido);
     }
   };
   Endereco.init({
@@ -23,8 +23,8 @@ module.exports = (sequelize, DataTypes) => {
     numero: DataTypes.STRING,
     complemento: DataTypes.STRING,
     cep: DataTypes.STRING,
-    activity: DataTypes.STRING,
-    userId: DataTypes.INTEGER
+    activity: DataTypes.BOOLEAN,
+    UserId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Endereco',
