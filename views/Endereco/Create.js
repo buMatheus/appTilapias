@@ -92,7 +92,7 @@ import {Picker} from '@react-native-picker/picker';
                     value={CEP}
                     placeholder='99.999-999'
                     onChangeText={cep=>setCep(cep)}
-                    onBlur={onBlurCep()}
+                    onBlur={()=>{onBlurCep()}}
                     style={css.form_Input}
                     />
                     <View style={css.form_SelectArea}>

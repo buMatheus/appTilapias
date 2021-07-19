@@ -10,19 +10,20 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
-      Endereco.belongsTo(models.User);
+      Endereco.belongsTo(models.User)
+      Endereco.belongsTo(models.Pedido)
     }
   };
   Endereco.init({
+    nome: DataTypes.STRING,
     estado: DataTypes.STRING,
     cidade: DataTypes.STRING,
     bairro: DataTypes.STRING,
-    cep: DataTypes.STRING,
     logradouro: DataTypes.STRING,
     numero: DataTypes.STRING,
     complemento: DataTypes.STRING,
-    activity:DataTypes.BOOLEAN,
+    cep: DataTypes.STRING,
+    activity: DataTypes.STRING,
     userId: DataTypes.INTEGER
   }, {
     sequelize,

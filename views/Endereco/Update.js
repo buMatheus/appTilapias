@@ -7,14 +7,15 @@ import {Picker} from '@react-native-picker/picker';
  
  export default function Update({route, navigation}){
     const { adress } = route.params;
-    const [CEP, setCep] = useState(adress.cep);
-    const [localidade, setLocalidade] = useState(adress.localidade);
-    const [bairro, setBairro] = useState(adress.bairro);
-    const [logradouro, setLogradouro] = useState(adress.logradouro);
-    const [userId, setUserId] = useState(adress.userId);
-    const [numero, setNumero] = useState(adress.numero);
-    const [complemento, setComplemento] = useState(adress.complemento);
-    const [uf, setUf] = useState(adress.uf);
+    const [id, setId] = useState('');
+    const [CEP, setCep] = useState('');
+    const [localidade, setLocalidade] = useState('');
+    const [bairro, setBairro] = useState('');
+    const [logradouro, setLogradouro] = useState('');
+    const [userId, setUserId] = useState('');
+    const [numero, setNumero] = useState('');
+    const [complemento, setComplemento] = useState('');
+    const [uf, setUf] = useState('');
 
     const [login, setLogin] = useState(false);
     const [inputState, setInputState] = useState(true);
@@ -23,7 +24,6 @@ import {Picker} from '@react-native-picker/picker';
         const Cep = CEP?.replace(/[^0-9]/g, '');
         fetch(`https://viacep.com.br/ws/${Cep}/json/`).then(res => res.json()).
         then(data =>{
-            console.log(data);
             setUf(data.uf);
             setLocalidade(data.localidade);
             setBairro(data.bairro);
@@ -39,26 +39,43 @@ import {Picker} from '@react-native-picker/picker';
     
     useEffect(()=>{
         verifyLogin();
+        initialValues();
     },[]);
 
     async function verifyLogin(){
         let response = await AsyncStorage.getItem('userNameData');
         let json = JSON.parse(response);
-        console.log(json);
         if(json !== null){
             setUserId(json.id);
             setLogin(true);
         }
     }
 
+    async function initialValues(){
+        setId(adress.id);
+        setCep(adress.cep);
+        setUf(adress.uf);
+        setLocalidade(adress.cidade);
+        setBairro(adress.bairro);
+        setLogradouro(adress.logradouro);
+        setNumero(adress.numero);
+        setComplemento(adress.complemento);
+        if(adress.cidade === localidade){
+            return true
+        }else{
+            return false
+        }
+    }
+
     async function sendForm(){
-        let response = await fetch(`${config.urlRoot}createAdress`, {
+        let response = await fetch(`${config.urlRoot}updateAdress`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type':'application/json'
             },
             body: JSON.stringify({
+                id: id,
                 cep: CEP,
                 uf: uf,
                 cidade: localidade,
@@ -92,7 +109,7 @@ import {Picker} from '@react-native-picker/picker';
                     value={CEP}
                     placeholder='99.999-999'
                     onChangeText={cep=>setCep(cep)}
-                    onBlur={onBlurCep()}
+                    onBlur={()=>onBlurCep()}
                     style={css.form_Input}
                     />
                     <View style={css.form_SelectArea}>
@@ -146,7 +163,7 @@ import {Picker} from '@react-native-picker/picker';
                     value= {complemento}
                     style={css.form_Input}
                     />
-                    <Button onPress={()=>sendForm()} title="Cadastrar" color="#62bac0"/>
+                    <Button onPress={()=>sendForm()} title="Atualizar" color="#62bac0"/>
                 </View>
             )}
         </KeyboardAvoidingView>

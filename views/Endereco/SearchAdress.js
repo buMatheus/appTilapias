@@ -50,6 +50,32 @@ export default function SearchAdress({navigation}){
             setAdress(json);
         }
     }
+
+    async function deleteAdress(element){
+        console.log(element)
+        let response = await fetch(`${config.urlRoot}deleteAdress`, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify({
+                id: element.id,
+                activity: element.activity,
+                userId: element.userId
+            }),
+        });
+        let json = await response.json();
+        if(json === 'success'){
+            console.log('Deu Certo!');
+            navigation.navigate('Endereco');
+        }else{
+            console.log((json))
+            console.log('Deu certo!')
+            navigation.navigate('Endereco');
+        }
+    }
+
     async function setActivity(){
         adress.forEach(element => {
             if(element.activity === true){
@@ -63,7 +89,7 @@ export default function SearchAdress({navigation}){
         });
     }
     async function switchActivity(element){
-        let response = await fetch(`${config.urlRoot}updateAdress`, {
+        let response = await fetch(`${config.urlRoot}updateAdressActivity`, {
             method: 'POST',
             body: JSON.stringify({
                 userId: id,
@@ -171,7 +197,10 @@ export default function SearchAdress({navigation}){
                                             Editar
                                         </Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={css.adressList_row4_atr2}>
+                                    <TouchableOpacity 
+                                        style={css.adressList_row4_atr2}
+                                        onPress = {()=> deleteAdress(adress[index])}
+                                    >
                                         <Text style={css.adressList_buttonText}>
                                             Deletar
                                         </Text>

@@ -55,8 +55,6 @@ app.get('/readAdress', async (req,res)=>{
   let readAdress = await adress.findByPk(req.body.adressId);
 });
 app.post('/readAllAdress', async (req,res)=>{
-  console.log('Cheguei');
-
   let readAllAdress = await adress.findAll({
     where: {
       userId: req.body.userId
@@ -64,10 +62,8 @@ app.post('/readAllAdress', async (req,res)=>{
   });
   if(readAllAdress === null){
     res.send(JSON.stringify('failed'));
-    console.log('failed');
   }else{
     res.send(readAllAdress);
-    console.log(readAllAdress);
   }
   
 });
@@ -93,15 +89,69 @@ app.post('/updateUser', async (req,res)=>{
     
     
 });
+app.post('/updateAdress', async (req,res)=>{
+  await adress.update({ activity: false }, { // coloca activity de todos os endereços do usuário logado em false
+    where: {
+      userId: req.body.userId
+    }
+  });
+  let response = await adress.findOne({
+    where:{
+      id:req.body.id
+    }
+  });
+  if(response === null ){
+    res.send(JSON.stringify('failed'));
+  }else{
+    response.id = req.body.id,
+    response.cep = req.body.cep,
+    response.estado= req.body.uf,
+    response.cidade= req.body.cidade,
+    response.bairro= req.body.bairro,
+    response.logradouro= req.body.logradouro,
+    response.numero= req.body.numero,
+    response.complemento= req.body.complemento,
+    response.activity= req.body.activity,
+    response.userId= req.body.userId,
+    response.save();
+    res.send(JSON.stringify('Atualizado com sucesso!'));
+  }
+    
+    
+});
 
 app.get('/deleteUser', async (req,res)=>{
     user.destroy({
-        where: {id: 1}
+        where: {id: req.body.id}
       });
     res.send('Usuário editado com sucesso!');
 });
 
-app.post('/updateAdress', async (req,res)=>{
+app.post('/deleteAdress', async (req,res)=>{
+  console.log('req.body.activity')
+  if(req.body.activity === true){
+    await adress.update({ activity: false }, { // coloca activity de todos os endereços do usuário logado em false
+      where: {
+        userId: req.body.userId
+      }
+    });
+    await adress.destroy({
+      where: {id: req.body.id}
+    });
+    let response = await adress.findOne({wher: {userId: req.body.userId}});
+    response.activity = true,
+    response.save();
+    res.send(response);
+  }else{
+    await adress.destroy({
+      where: {id: req.body.id}
+    });
+    res.send(JSON.stringify('success'));
+  }
+  
+});
+
+app.post('/updateAdressActivity', async (req,res)=>{
   await adress.update({ activity: false }, { // coloca activity de todos os endereços do usuário logado em false
     where: {
       userId: req.body.userId

@@ -8,6 +8,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      nome: {
+        type: Sequelize.STRING
+      },
       estado: {
         type: Sequelize.STRING
       },
@@ -15,9 +18,6 @@ module.exports = {
         type: Sequelize.STRING
       },
       bairro: {
-        type: Sequelize.STRING
-      },
-      cep: {
         type: Sequelize.STRING
       },
       logradouro: {
@@ -29,18 +29,20 @@ module.exports = {
       complemento: {
         type: Sequelize.STRING
       },
+      cep: {
+        type: Sequelize.STRING
+      },
       activity: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.STRING
       },
       userId: {
         type: Sequelize.INTEGER,
-        references:{
+        references: {
           model: 'users',
-          key: 'id',
+          key: 'id'
         },
-        onUpdate:'cascade',
-        onDelete:'cascade',
-
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
       },
       createdAt: {
         allowNull: false,
